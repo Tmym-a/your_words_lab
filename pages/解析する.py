@@ -47,7 +47,7 @@ else:
     st.write('形態素解析フォーム')
 
     with st.form(key='select_form'):
-        options = st.multiselect("品詞の選択", all_parts, ['名詞','動詞','形容詞','副詞'])
+        options = st.multiselect("品詞の選択", all_parts, ['名詞','代名詞','形状詞','副詞','動詞','形容詞'])
         st.text('これまでの書き込み内容を形態素解析し、上記の品詞に該当する言葉を抽出します。')
         submit_btn = st.form_submit_button('実行')
 
@@ -89,6 +89,8 @@ else:
                 st.subheader('解析結果')
                 img = Image.open('wc.png')
                 st.image(img, caption='あなたの日記の内容から作成されたワードクラウド', use_column_width=True)
+                st.write('')
+                st.caption('※ 形状詞とは、UniDicの品詞体系で、形容動詞語幹を意味しています。')
 
                 st.sidebar.header('Below is a DataFrame:')
                 st.sidebar.write('使用頻度の高い言葉', df)
