@@ -1,0 +1,9 @@
+streamlit==1.12.2
+sqlite3
+mecab-python3==0.7
+wordcloud==1.8.2.2
+PIL
+
+
+
+
