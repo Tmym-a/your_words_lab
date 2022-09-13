@@ -9,8 +9,8 @@ from PIL import Image
 
 
 fpath = './IPAfont00303/ipam.ttf'
-all_parts = ['名詞','動詞','形容詞','副詞','助詞','接続詞','助動詞',
-            '連体詞','感動詞','接頭詞','フィラー','記号','その他']
+all_parts = ['名詞','代名詞','形状詞','連体詞','副詞','接続詞','感動詞',
+            '動詞','形容詞','助動詞','助詞','接頭辞','接尾辞','記号',]
 
 
 def generate_list(text, selected_parts):
@@ -21,7 +21,7 @@ def generate_list(text, selected_parts):
     wordlist = []
 
     for part in parts.split('\n')[:-2]:
-        word_part = part.split(',')[0].split('\t')
+        word_part = [part.split('\t')[0], part.split('\t')[4].split('-')[0]]
         p = word_part[1]
 
         if p in selected_parts:
