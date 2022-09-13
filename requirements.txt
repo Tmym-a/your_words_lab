@@ -1,4 +1,6 @@
 streamlit==1.12.2
+mecab
+mecab-ipadic
 mecab-python3==0.7
 wordcloud==1.8.2.2
 Pillow==9.2.0
