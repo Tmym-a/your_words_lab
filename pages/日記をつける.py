@@ -1,5 +1,6 @@
 import streamlit as st
-import datetime
+import datetime as dt
+from zoneinfo import ZoneInfo
 import sqlite3 
 
 WEEK = ('月', '火', '水', '木', '金', '土', '日')
@@ -31,10 +32,15 @@ def home():
     st.sidebar.header(f'{user}の日記')
 
     st.title('How was your day?')
-    today = datetime.date.today()
-    st.subheader(f'{today.month}月{today.day}日（{WEEK[today.weekday()]}）')
+
+    now = dt.datetime.now(ZoneInfo("Asia/Tokyo"))
+    isoformat = now.isoformat()
+    c = dt.datetime.fromisoformat(isoformat)
+    week_number = dt.date(c.year,c.month,c.day).weekday()
+
+    st.subheader(f'{c.month}月{c.day}日（{WEEK[week_number]}）')
     
-    page_date = st.date_input('どのページに書き込みますか？', datetime.date(today.year, today.month, today.day))    
+    page_date = st.date_input('どのページに書き込みますか？', dt.date(c.year, c.month, c.day))    
     
     st.write('')
 
