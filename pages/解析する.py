@@ -20,7 +20,7 @@ def generate_list(text, selected_parts):
     wp_list = []
     wordlist = []
 
-    for part in parts.split('\n')[:-2]:
+    for part in parts.split('\n')[:-1]:
         word_part = [part.split('\t')[0], part.split('\t')[4].split('-')[0]]
         p = word_part[1]
 
