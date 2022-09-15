@@ -57,6 +57,7 @@ def main():
 		st.subheader('ログイン画面です')
 		username = st.text_input('ユーザー名を入力してください')
 		password = st.text_input('パスワードを入力してください', type = 'password')
+		st.write('反映されています')
 
 		if st.button('ログイン'):
 			hashed = hash(password)
