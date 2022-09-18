@@ -27,6 +27,13 @@ def edit(page_date, user, input_data):
         c.close()
         st.info('上記の内容で書き込みました')
 
+        
+
+def make_row(word, kana_index=7, lemma_index=6):
+    ff = dict(enumerate(word.feature.split(",")))
+    return dict(surface=word.surface, kana=ff.get(kana_index), lemma=ff.get(lemma_index), 
+            pos1=ff.get(0), pos2=ff.get(1), pos3=ff.get(2), pos4=ff.get(3))
+
 
 def home():
     user = st.session_state['user']
@@ -76,12 +83,6 @@ def home():
         st.write('')
         st.write('このページで使用した言葉')
         st.table(data)
-
-
-def make_row(word, kana_index=7, lemma_index=6):
-    ff = dict(enumerate(word.feature.split(",")))
-    return dict(surface=word.surface, kana=ff.get(kana_index), lemma=ff.get(lemma_index), 
-            pos1=ff.get(0), pos2=ff.get(1), pos3=ff.get(2), pos4=ff.get(3))
 
 
 
