@@ -3,6 +3,10 @@ import datetime as dt
 from zoneinfo import ZoneInfo
 import sqlite3
 import MeCab
+import os
+
+os.system('git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git && cd mecab-ipadic-neologd && ./bin/install-mecab-ipadic-neologd -n -y -u -p $PWD')
+os.system('cd mecab-ipadic-neologd && ./bin/install-mecab-ipadic-neologd -n -y -u -p $PWD')
 
 WEEK = ('月', '火', '水', '木', '金', '土', '日')
 
@@ -27,7 +31,7 @@ def edit(page_date, user, input_data):
         c.close()
         st.info('上記の内容で書き込みました')
 
-        
+
 
 def make_row(word, kana_index=7, lemma_index=6):
     ff = dict(enumerate(word.feature.split(",")))
@@ -71,7 +75,7 @@ def home():
         edit(page_date, user, input_data)
 
         data = []
-        tagger = MeCab.Tagger()
+        tagger = MeCab.Tagger('-r /etc/mecabrc -d /home/user/日記をつける/mecab-ipadic-neologd')
         node = tagger.parseToNode(input_data)
         while node:
             if node.feature.startswith('BOS/EOS'):
