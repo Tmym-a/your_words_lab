@@ -1,0 +1,4 @@
+file
+mecab
+libmecab-dev
+mecab-ipadic-utf8
