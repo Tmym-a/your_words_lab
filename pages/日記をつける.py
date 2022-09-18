@@ -1,7 +1,8 @@
 import streamlit as st
 import datetime as dt
 from zoneinfo import ZoneInfo
-import sqlite3 
+import sqlite3
+import MeCab
 
 WEEK = ('月', '火', '水', '木', '金', '土', '日')
 
@@ -61,6 +62,27 @@ def home():
 
     if st.button('保存'):
         edit(page_date, user, input_data)
+
+        data = []
+        tagger = MeCab.Tagger('-d mecab-ipadic-neologd/build/mecab-ipadic-2.7.0-20070801-neologd-20200910')
+        node = tagger.parseToNode(input_data)
+        while node:
+            if node.feature.startswith('BOS/EOS'):
+                pass
+            else:
+                data.append(make_row(node))
+            node = node.next
+            
+        st.write('')
+        st.write('このページで使用した言葉')
+        st.table(data)
+
+
+def make_row(word, kana_index=7, lemma_index=6):
+    ff = dict(enumerate(word.feature.split(",")))
+    return dict(surface=word.surface, kana=ff.get(kana_index), lemma=ff.get(lemma_index), 
+            pos1=ff.get(0), pos2=ff.get(1), pos3=ff.get(2), pos4=ff.get(3))
+
 
 
 if 'user' not in st.session_state:

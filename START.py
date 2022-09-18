@@ -1,6 +1,10 @@
 import streamlit as st
 import sqlite3 
 import hashlib
+import os
+
+os.system('git clone --depth 1 https://github.com/neologd/mecab-ipadic-neologd.git && cd mecab-ipadic-neologd && ./bin/install-mecab-ipadic-neologd -n -y -u -p $PWD')
+os.system('cd mecab-ipadic-neologd && ./bin/install-mecab-ipadic-neologd -n -y -u -p $PWD')
 
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
