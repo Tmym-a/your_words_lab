@@ -72,7 +72,7 @@ def home():
         edit(page_date, user, input_data)
 
         data = []
-        tagger = MeCab.Tagger()
+        tagger = MeCab.Tagger("-d /home/appuser/venv/lib/python3.9/site-packages/ipadic")
         node = tagger.parseToNode(input_data)
         while node:
             if node.feature.startswith('BOS/EOS'):
