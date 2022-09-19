@@ -8,3 +8,4 @@ pandas==1.4.4
 matplotlib
 japanize_matplotlib
 scikit-learn
+gensim

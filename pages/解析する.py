@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import japanize_matplotlib
 from sklearn.decomposition import PCA
 import pickle
+import gensim
 
 
 
