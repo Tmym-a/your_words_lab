@@ -3,9 +3,8 @@ mecab-python3
 unidic-lite
 wordcloud==1.8.2.2
 Pillow==9.2.0
+numpy
 pandas==1.4.4
 matplotlib
 japanize_matplotlib
-
-
-
+sklearn
