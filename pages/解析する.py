@@ -6,6 +6,8 @@ import MeCab
 from wordcloud import WordCloud
 from collections import defaultdict
 from PIL import Image
+import matplotlib.pyplot as plt
+import japanize_matplotlib
 
 
 fpath = './IPAfont00303/ipam.ttf'
@@ -53,7 +55,10 @@ else:
 
     with st.form(key='select_form'):
         options = st.multiselect('品詞の選択', all_parts, ['名詞','代名詞','形状詞','副詞','動詞','形容詞'])
+        st.caption('※ 形状詞とは、UniDicの品詞体系で、形容動詞語幹を意味しています。')
         st.text('これまでの書き込み内容を形態素解析し、上記の品詞に該当する言葉を抽出します。')
+        st.write('')
+
         stop_line = st.text_area('ストップワードの入力', placeholder='ここに言葉を読点「、」区切りでいくつか入力すると、それらを除外して解析します。')
         stop_words = stop_line.split('、')
         submit_btn = st.form_submit_button('実行')
@@ -83,6 +88,9 @@ else:
                 df = pd.DataFrame(total_list)
                 df.columns = ['表層形','品詞','度数']
                 # df = df.sort_values('度数', ascending=False)
+                keys = [_[0][0] for _ in items[:10]]
+                values = [_[1] for _ in items[:10]]
+                
 
                 wc = WordCloud(background_color='white', width=960, height=640, font_path=fpath)
                 wc.generate(full_text)
@@ -97,8 +105,14 @@ else:
                 st.subheader('解析結果')
                 img = Image.open('wc.png')
                 st.image(img, caption='あなたの日記の内容から作成されたワードクラウド', use_column_width=True)
+                
                 st.write('')
-                st.caption('※ 形状詞とは、UniDicの品詞体系で、形容動詞語幹を意味しています。')
+                fig, ax = plt.subplots()
+                ax.bar(keys, values)
+                st.pyplot(fig)
+
+                
+                
 
                 st.sidebar.header('Below is a DataFrame:')
                 st.sidebar.write('使用頻度の高い言葉', df.head(100))
