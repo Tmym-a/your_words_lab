@@ -1,4 +1,4 @@
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-vy5o4k.streamlitapp.com/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-ey2hgf.streamlitapp.com/)
 
 上のバッジをクリックすると、アプリが立ち上がります。
 
