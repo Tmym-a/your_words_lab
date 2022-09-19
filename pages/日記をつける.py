@@ -30,10 +30,10 @@ def edit(page_date, user, input_data):
 
 
 
-def make_row(word, kana_index=7, lemma_index=6):
-    ff = dict(enumerate(word.feature.split(",")))
-    return dict(surface=word.surface, kana=ff.get(kana_index), lemma=ff.get(lemma_index), 
-            pos1=ff.get(0), pos2=ff.get(1), pos3=ff.get(2), pos4=ff.get(3))
+def make_row(word, kana_index=6, lemma_index=7):
+    ff = dict(enumerate(word.feature.split(',')))
+    return dict(表層形=word.surface, カナ=ff.get(kana_index), 原形=ff.get(lemma_index), 
+            品詞1=ff.get(0), 品詞2=ff.get(1), 品詞3=ff.get(2), 品詞4=ff.get(3))
 
 
 def home():
@@ -42,7 +42,7 @@ def home():
 
     st.title('How was your day?')
 
-    now = dt.datetime.now(ZoneInfo("Asia/Tokyo"))
+    now = dt.datetime.now(ZoneInfo('Asia/Tokyo'))
     isoformat = now.isoformat()
     c = dt.datetime.fromisoformat(isoformat)
     week_number = dt.date(c.year,c.month,c.day).weekday()

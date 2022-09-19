@@ -13,28 +13,33 @@ all_parts = ['名詞','代名詞','形状詞','連体詞','副詞','接続詞','
             '動詞','形容詞','助動詞','助詞','接頭辞','接尾辞','記号',]
 
 
-def generate_list(text, selected_parts):
-    m = MeCab.Tagger()
-    parts = m.parse(text)
+def morphological_analysis(text, selected_parts, stop_words):
+    tagger = MeCab.Tagger()
+    node = tagger.parseToNode(text)
     dic = defaultdict(int)
-    wp_list = []
-    wordlist = []
+    morpheme_words = []
 
-    for part in parts.split('\n')[:-2]:
-        word_part = [part.split('\t')[0], part.split('\t')[4].split('-')[0]]
-        p = word_part[1]
+    while  node:
+        if node.feature.startswith('BOS/EOS') or node.surface in stop_words:
+            pass
+        else:
+            f = node.feature.split(',')
+            surface = node.surface
+            pos1 = f[0]
 
-        if p in selected_parts:
-            wp_list.append(word_part)
-            wordlist.append(word_part[0])
-            dic[tuple(word_part)] += 1
+            if pos1 in selected_parts and surface != '':
+                dic[(surface, pos1)] += 1
+                morpheme_words.append(surface)
 
+        node = node.next
+        
+    sorted_items = sorted(dic.items(), key = lambda x: -x[1])
     merged_list = []
 
-    for k, v in dic.items():
+    for k, v in sorted_items:
         merged_list.append([k[0], k[1], v])
 
-    return merged_list, wordlist
+    return merged_list, morpheme_words, sorted_items
 
 
 if 'user' not in st.session_state:
@@ -47,8 +52,10 @@ else:
     st.write('形態素解析フォーム')
 
     with st.form(key='select_form'):
-        options = st.multiselect("品詞の選択", all_parts, ['名詞','代名詞','形状詞','副詞','動詞','形容詞'])
+        options = st.multiselect('品詞の選択', all_parts, ['名詞','代名詞','形状詞','副詞','動詞','形容詞'])
         st.text('これまでの書き込み内容を形態素解析し、上記の品詞に該当する言葉を抽出します。')
+        stop_line = st.text_area('ストップワードの入力', placeholder='ここに言葉を読点「、」区切りでいくつか入力すると、それらを除外して解析します。')
+        stop_words = stop_line.split('、')
         submit_btn = st.form_submit_button('実行')
 
     if submit_btn:
@@ -68,13 +75,14 @@ else:
       
             try:
                 user_df = df[df['writer']==user]
-                accumulation = user_df['words'].values.tolist()
+                corpus = user_df['words'].values.tolist()
 
-                total_list, series = generate_list(' '.join(accumulation), options)
+                total_list, series, items = morphological_analysis(' '.join(corpus), options, stop_words)
+                # series = [_[0][0] for _ in items]
                 full_text = ' '.join(series)
                 df = pd.DataFrame(total_list)
                 df.columns = ['表層形','品詞','度数']
-                df = df.sort_values('度数', ascending=False)
+                # df = df.sort_values('度数', ascending=False)
 
                 wc = WordCloud(background_color='white', width=960, height=640, font_path=fpath)
                 wc.generate(full_text)
@@ -93,7 +101,7 @@ else:
                 st.caption('※ 形状詞とは、UniDicの品詞体系で、形容動詞語幹を意味しています。')
 
                 st.sidebar.header('Below is a DataFrame:')
-                st.sidebar.write('使用頻度の高い言葉', df)
+                st.sidebar.write('使用頻度の高い言葉', df.head(100))
                 st.sidebar.caption('※ 列名をクリックでソート可能')              
 
             except ValueError:
