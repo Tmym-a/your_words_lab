@@ -1,13 +1,17 @@
 import streamlit as st
 import sqlite3
-import pandas as pd
 import time
 import MeCab
 from wordcloud import WordCloud
 from collections import defaultdict
 from PIL import Image
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 import japanize_matplotlib
+from sklearn.decomposition import PCA
+import pickle
+
 
 
 fpath = './IPAfont00303/ipam.ttf'
@@ -54,7 +58,7 @@ else:
     st.write('形態素解析フォーム')
 
     with st.form(key='select_form'):
-        options = st.multiselect('品詞の選択', all_parts, ['名詞','代名詞','形状詞','副詞','動詞','形容詞'])
+        options = st.multiselect('品詞の選択', all_parts, ['名詞'])
         st.caption('※ 形状詞とは、UniDicの品詞体系で、形容動詞語幹を意味しています。')
         st.text('これまでの書き込み内容を形態素解析し、上記の品詞に該当する言葉を抽出します。')
         st.write('')
@@ -88,7 +92,7 @@ else:
                 df = pd.DataFrame(total_list)
                 df.columns = ['表層形','品詞','度数']
                 # df = df.sort_values('度数', ascending=False)
-                keys = [_[0][0] for _ in items[:10]]
+                keys = [_[0][0] for _ in items]
                 values = [_[1] for _ in items[:10]]
                 
 
@@ -108,12 +112,25 @@ else:
                 
                 st.write('')
                 fig, ax = plt.subplots()
-                ax.bar(keys, values)
+                ax.bar(keys[:10], values)
+                fig.suptitle('出現頻度 TOP10')
                 st.pyplot(fig)
 
-                
-                
+                with open('gensim-kvecs.cc.ja.300.vec.pkl',  mode = 'rb') as fp:
+                    model = pickle.load(fp)
 
+                vectors = [model[key] for key in keys]
+                model2d = PCA(n_components=2, whiten=True)
+                model2d.fit(np.array(vectors).T)
+
+                fig, ax = plt.subplots()
+                ax.scatter(model2d.components_[0],model2d.components_[1])
+                for (x,y), name in zip(model2d.components_.T, keys):
+                    ax.annotate(name, (x,y))
+                fig.suptitle('単語ベクトルの分布')
+                st.pyplot(fig)
+                st.caption('※ 可視化のため、ベクトル空間を300次元から2次元に次元削減しています')   
+                
                 st.sidebar.header('Below is a DataFrame:')
                 st.sidebar.write('使用頻度の高い言葉', df.head(100))
                 st.sidebar.caption('※ 列名をクリックでソート可能')              
