@@ -116,7 +116,7 @@ else:
                 fig.suptitle('出現頻度 TOP10')
                 st.pyplot(fig)
 
-                with open('gensim-kvecs.cc.ja.300.vec.pkl',  mode = 'rb') as fp:
+                with open('fastText.ja.300.vec.pkl',  mode = 'rb') as fp:
                     model = pickle.load(fp)
 
                 vectors = [model[key] for key in keys]
