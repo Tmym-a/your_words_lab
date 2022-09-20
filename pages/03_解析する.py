@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import japanize_matplotlib
+from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 import pickle
 import gensim
@@ -19,7 +20,7 @@ import unicodedata
 
 fpath = './IPAfont00303/ipam.ttf'
 all_parts = ['名詞','代名詞','形状詞','連体詞','副詞','接続詞','感動詞',
-            '動詞','形容詞','助動詞','助詞','接頭辞','接尾辞','記号',]
+            '動詞','形容詞','助動詞','助詞','接頭辞','接尾辞','記号','補助記号']
 
 # 前処理（単語の正規化）
 def preprocessing(text):  
@@ -104,6 +105,12 @@ def show_results(user, options, stop_words):
         ax.bar(keys[:10], values)
         fig.suptitle('出現頻度 TOP10')
         st.pyplot(fig)
+        st.write('')
+
+        st.sidebar.header('Below is a DataFrame:')
+        st.sidebar.write('該当ワード一覧', df)
+        st.sidebar.caption('※ 列名をクリックでソート可能')    
+
 
         with open('fastText.ja.300.vec.pkl',  mode = 'rb') as fp:
             model = pickle.load(fp)
@@ -112,29 +119,53 @@ def show_results(user, options, stop_words):
         vectors = []
         keys_in_model = []
 
-        for key in keys[:30]:
+        for key in keys:
             if key in model.index_to_key:
                 vectors.append(model[key])
                 keys_in_model.append(key)
 
         model2d = PCA(n_components=2, whiten=True)
-        model2d.fit(np.array(vectors).T)
+        model2d.fit(np.array(vectors[:30]).T)
 
         fig, ax = plt.subplots()
         ax.scatter(model2d.components_[0],model2d.components_[1])
-        for (x,y), name in zip(model2d.components_.T, keys_in_model):
+        for (x,y), name in zip(model2d.components_.T, keys_in_model[:30]):
             ax.annotate(name, (x,y))
         fig.suptitle('単語ベクトルの分布（上位３０単語まで）')
         st.pyplot(fig)
-        st.caption('※ 可視化のため、ベクトル空間を300次元から2次元に次元削減しています')   
-        
-        st.sidebar.header('Below is a DataFrame:')
-        st.sidebar.write('使用頻度の高い言葉', df.head(100))
-        st.sidebar.caption('※ 列名をクリックでソート可能')              
+        st.caption('※ 可視化のため、ベクトル空間を300次元から2次元に次元削減しています')  
+        st.write('')
+
+        # n_clusters = len(keys_in_model) // 10 + 1
+        n_clusters = int(np.sqrt(len(keys_in_model))) + 1
+        kmeans_model = KMeans(n_clusters=n_clusters, verbose=1, random_state=0) 
+        kmeans_model.fit(vectors)
+
+        cluster_labels = kmeans_model.labels_
+        cluster_to_words = defaultdict(list)
+        for cluster_id, word in zip(cluster_labels, keys_in_model):
+            cluster_to_words[cluster_id].append(word)
+
+        st.write('')
+        st.subheader('似ている言葉のグループ')
+
+        for i, words in enumerate(cluster_to_words.values()):
+            cluster_df = pd.DataFrame(words).T
+            cluster_df.index = [f'cluster {i}']
+            # st.write(f'cluster{i}')
+            st.write(cluster_df)
+        #     st.table(words)
+        # cluster_df = cluster_to_words.values()
+        # st.dataframe(cluster_df)
+                 
 
     except ValueError:
-        st.warning('まだ、該当する言葉は書き込まれていません')
-
+        st.warning('解析が実行されない場合は、まだ該当する言葉が書き込まれていません。')
+        st.info('''
+        出現頻度の棒グラフまでしか表示されない場合は、該当する言葉のうち、単語ベクトルを学習
+        済みのものが一つ以下のため、主成分分析やクラスタリングを実行できていません。
+        ''')
+    
 
 
 if 'user' not in st.session_state:
