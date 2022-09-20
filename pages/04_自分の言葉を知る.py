@@ -30,7 +30,7 @@ else:
     with col2:
         '##'
         button = st.button('調べる')
-    
+    '##'
     if button:
         keyword = preprocessing(keyword)
         if keyword in model.index_to_key:
@@ -39,11 +39,13 @@ else:
                 similar_df = pd.DataFrame(model.most_similar(positive=[keyword]))
                 similar_df = similar_df.set_index(0)
                 similar_df.columns = ['cos類似度']
+                st.write('Similar words')
                 st.table(similar_df)
             with col2:
                 opposite_df = pd.DataFrame(model.most_similar(negative=[keyword])).iloc[::-1]
                 opposite_df = opposite_df.set_index(0)
                 opposite_df.columns = ['cos類似度']
+                st.write('Opposite words')
                 st.table(opposite_df)
         else:
             st.info('申し訳ありません。その単語は登録されていないため検索できません。')
