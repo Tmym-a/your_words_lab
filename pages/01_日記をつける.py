@@ -67,6 +67,8 @@ def home():
     if input_data is not None:
         st.write('入力データ')
         st.write(input_data)
+    '##'
+    feeling = st.slider('この日の気分を入力できます', -10, 10, 0)
 
     if st.button('保存'):
         edit(page_date, user, input_data)
@@ -84,7 +86,7 @@ def home():
         st.write('')
         st.write('このページで使用した言葉')
         st.table(data)
-
+        st.write(f'気分：{feeling}')
 
 
 if 'user' not in st.session_state:

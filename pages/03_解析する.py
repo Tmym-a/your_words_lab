@@ -95,17 +95,19 @@ def show_results(user, options, stop_words):
             bar.progress(i + 1)
             time.sleep(0.005)
         comment.text('Done!')
-
+        '##'
         st.subheader('解析結果')
-        img = Image.open('wc.png')
-        st.image(img, caption='あなたの日記の内容から作成されたワードクラウド', use_column_width=True)
-        st.write('')
+        tab1, tab2, tab3, tab4 = st.tabs(['🌩 Word cloud', '📊 TOP10', '📉 Vectors', '💥 Clusters'])
 
-        fig, ax = plt.subplots()
-        ax.bar(keys[:10], values)
-        fig.suptitle('出現頻度 TOP10')
-        st.pyplot(fig)
-        st.write('')
+        with tab1:
+            img = Image.open('wc.png')
+            st.image(img, caption='あなたの日記の内容から作成されたワードクラウド', use_column_width=True)
+
+        with tab2:
+            fig, ax = plt.subplots()
+            ax.bar(keys[:10], values)
+            fig.suptitle('出現頻度 TOP10')
+            st.pyplot(fig)
 
         st.sidebar.header('Below is a DataFrame:')
         st.sidebar.write('該当ワード一覧', df)
@@ -127,14 +129,14 @@ def show_results(user, options, stop_words):
         model2d = PCA(n_components=2, whiten=True)
         model2d.fit(np.array(vectors[:30]).T)
 
-        fig, ax = plt.subplots()
-        ax.scatter(model2d.components_[0],model2d.components_[1])
-        for (x,y), name in zip(model2d.components_.T, keys_in_model[:30]):
-            ax.annotate(name, (x,y))
-        fig.suptitle('単語ベクトルの分布（上位３０単語まで）')
-        st.pyplot(fig)
-        st.caption('※ 可視化のため、ベクトル空間を300次元から2次元に次元削減しています')  
-        st.write('')
+        with tab3:
+            fig, ax = plt.subplots()
+            ax.scatter(model2d.components_[0],model2d.components_[1])
+            for (x,y), name in zip(model2d.components_.T, keys_in_model[:30]):
+                ax.annotate(name, (x,y))
+            fig.suptitle('単語ベクトルの分布（上位３０単語まで）')
+            st.pyplot(fig)
+            st.caption('※ 可視化のため、ベクトル空間を300次元から2次元に次元削減しています')  
 
         # n_clusters = len(keys_in_model) // 10 + 1
         n_clusters = int(np.sqrt(len(keys_in_model))) + 1
@@ -146,14 +148,13 @@ def show_results(user, options, stop_words):
         for cluster_id, word in zip(cluster_labels, keys_in_model):
             cluster_to_words[cluster_id].append(word)
 
-        st.write('')
-        st.subheader('似ている言葉のグループ')
-
-        for i, words in enumerate(cluster_to_words.values()):
-            cluster_df = pd.DataFrame(words).T
-            cluster_df.index = [f'cluster {i}']
-            # st.write(f'cluster{i}')
-            st.write(cluster_df)
+        with tab4:
+            st.write('似ている言葉のグループ')
+            for i, words in enumerate(cluster_to_words.values()):
+                cluster_df = pd.DataFrame(words).T
+                cluster_df.index = [f'cluster {i}']
+                # st.write(f'cluster{i}')
+                st.write(cluster_df)
         #     st.table(words)
         # cluster_df = cluster_to_words.values()
         # st.dataframe(cluster_df)
