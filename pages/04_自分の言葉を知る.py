@@ -16,6 +16,7 @@ if 'user' not in st.session_state:
     st.info("ログイン後に利用可能です")
 
 else:
+    st.title('Your Words Laboratory')
     with open('fastText.ja.300.vec.pkl',  mode = 'rb') as fp:
         model = pickle.load(fp)
 
