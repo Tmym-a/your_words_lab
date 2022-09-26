@@ -9,26 +9,17 @@ from abc import ABCMeta
 
 
 # 管理者の設定
-if 'administrators' not in st.session_state:
-    st.session_state['administrators'] = ['admin1', 'admin2']
-
-# 初期化
-if 'model' not in st.session_state:
-    with open('fastText.ja.300.vec.pkl',  mode = 'rb') as fp:
-        st.session_state['model'] = pickle.load(fp)
-
-if 'polarity_df' not in st.session_state:
-    st.session_state['polarity_df'] = pd.read_pickle('nega_posi_df.pkl')
+administrators = ['admin1', 'admin2']
 
 
 # 抽象クラスPage(それぞれのページで継承して使う)
 class Page(metaclass = ABCMeta):
-    def __init__(self, session_state, cor): # corはCorpusクラスのインスタンス（集約）
-        self.state = session_state
+    def __init__(self, cor): # corはCorpusクラスのインスタンス（集約）
+        self.state = st.session_state
         self.cor = cor
         self.user = self.get_user()
         self.users = self.get_users()
-        self.authority = self.user in self.state['administrators']  
+        self.authority = self.user in administrators 
 
     # ログイン済みユーザー名の取得
     def get_user(self):
@@ -59,11 +50,9 @@ class Page(metaclass = ABCMeta):
 
 
 class Corpus():
-    def __init__(self, session_state):
-        self.state = session_state
-        self.model = self.state['model']
-        self.polarity = self.state['polarity_df']
-        self.polarity_keys = set(self.polarity.index.to_list())
+    def get_model(self):
+        with open('fastText.ja.300.vec.pkl',  mode = 'rb') as fp:
+            return pickle.load(fp)
 
     # 前処理（単語の正規化）
     def preprocessing(self, text):  

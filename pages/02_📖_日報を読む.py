@@ -41,8 +41,8 @@ class Page2(module.Page):
             st.warning('まだ何も書いてありません')
 
 
-cor = module.Corpus(st.session_state)
-page = Page2(st.session_state, cor)
+cor = module.Corpus()
+page = Page2(cor)
 
 page.check_login_status()
     

@@ -3,12 +3,14 @@ import datetime as dt
 from zoneinfo import ZoneInfo
 import sqlite3
 import MeCab
+import pandas as pd
 import module
 
 
 class Corpus1(module.Corpus):
-    def __init__(self, session_state):
-        super().__init__(session_state)
+    def __init__(self):
+        self.polarity = pd.read_pickle('nega_posi_df.pkl')
+        self.polarity_keys = set(self.polarity.index.to_list())
 
     def make_row(self, word, kana_index=6, lemma_index=7):
         ff = dict(enumerate(word.feature.split(',')))
@@ -21,8 +23,8 @@ class Corpus1(module.Corpus):
 
 
 class Page1(module.Page):
-    def __init__(self, session_state, cor):
-        super().__init__(session_state, cor)
+    def __init__(self, cor):
+        super().__init__(cor)
         self.WEEK = ('月', '火', '水', '木', '金', '土', '日')
         self.zone = self.get_zone()
     
@@ -110,7 +112,7 @@ class Page1(module.Page):
             self.result()  
 
 
-cor = Corpus1(st.session_state)
-page = Page1(st.session_state, cor)
+cor = Corpus1()
+page = Page1(cor)
 
 page.check_login_status()

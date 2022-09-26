@@ -13,9 +13,9 @@ import module
 
 
 class Corpus3(module.Corpus):
-    def __init__(self, session_state):
-        super().__init__(session_state)
+    def __init__(self):
         self.fpath = './IPAfont00303/ipam.ttf'
+        self.model = self.get_model()
 
     def morphological_analysis(self, text, selected_parts, stop_words):
         tagger = MeCab.Tagger()
@@ -88,8 +88,8 @@ class Corpus3(module.Corpus):
         fig, ax = plt.subplots()
         ax.scatter(model2d.components_[0],model2d.components_[1])
 
-        for (x,y), name in zip(model2d.components_.T, self.keys_in_model[:30]):
-            ax.annotate(name, (x,y))
+        for (x, y), name in zip(model2d.components_.T, self.keys_in_model[:30]):
+            ax.annotate(name, (x, y))
         fig.suptitle('単語ベクトルの分布（上位３０単語まで）')
         st.pyplot(fig)
 
@@ -101,8 +101,8 @@ class Corpus3(module.Corpus):
 
 
 class Page3(module.Page):
-    def __init__(self, session_state, cor):
-        super().__init__(session_state, cor)
+    def __init__(self, cor):
+        super().__init__(cor)
         self.all_parts = ['名詞','代名詞','形状詞','連体詞','副詞','接続詞','感動詞',
                         '動詞','形容詞','助動詞','助詞','接頭辞','接尾辞','記号','補助記号']
 
@@ -198,7 +198,7 @@ class Page3(module.Page):
                     ''')
             
 
-cor = Corpus3(st.session_state)
-page = Page3(st.session_state, cor)
+cor = Corpus3()
+page = Page3(cor)
 
 page.check_login_status()

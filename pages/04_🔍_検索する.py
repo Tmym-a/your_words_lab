@@ -4,6 +4,9 @@ import module
 
 
 class Corpus4(module.Corpus):
+    def __init__(self):
+        self.model = self.get_model()
+
     def result(self, keyword):
         keyword = self.preprocessing(keyword)
 
@@ -46,7 +49,7 @@ class Page4(module.Page):
             self.cor.result(keyword)
 
 
-cor = Corpus4(st.session_state)
-page = Page4(st.session_state, cor)
+cor = Corpus4()
+page = Page4(cor)
 
 page.check_login_status()
