@@ -1,5 +1,4 @@
 import streamlit as st
-import time
 import MeCab
 from wordcloud import WordCloud
 from collections import defaultdict
