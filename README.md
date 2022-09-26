@@ -3,6 +3,7 @@
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-y3niw8.streamlitapp.com/)
 
 上のバッジをクリックすると、アプリが立ち上がります。
+#
 
 「日報で遊ぼう」というコンセプトで制作した、日報管理システムです。
 
