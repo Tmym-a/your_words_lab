@@ -6,16 +6,13 @@ import hashlib
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
-
 def hash(password):
 	return hashlib.sha256(str.encode(password)).hexdigest()
-
 
 def check_hashes(password, hashed_text):
 	if hash(password) == hashed_text:
 		return hashed_text
 	return False
-
 
 def create_tables():
 	query = '''
@@ -26,16 +23,14 @@ def create_tables():
 
 	query = '''
 	CREATE TABLE 
-	IF NOT EXISTS diary(date TEXT, writer TEXT, words TEXT, PRIMARY KEY(date, writer));
+	IF NOT EXISTS reports(date TEXT, writer TEXT, words TEXT, feelings REAL, variables INTEGER, PRIMARY KEY(date, writer));
 	'''
 	c.execute(query)
 
-
-def add_user(username, password):
+def user_registration(username, password):
 	query = 'INSERT INTO userstable(username, password) VALUES (?, ?);'
 	c.execute(query, (username, password))
 	conn.commit()
-
 
 def login_user(username,password):
 	query = '''
@@ -46,8 +41,7 @@ def login_user(username,password):
 	record = c.fetchall()
 	return record
 
-
-def main():
+def start_menu():
 	st.title('Who Writes?')
 
 	menu = ['ログイン', '新規登録']
@@ -67,7 +61,8 @@ def main():
 				st.session_state['user'] = result[0][0]
 				st.balloons()
 				st.success('ようこそ！ {}さん'.format(st.session_state['user']))
-				c.close()			
+				c.close()
+	
 			else:
 				st.warning('ユーザー名かパスワードが間違っています')
 
@@ -79,7 +74,7 @@ def main():
 		if st.button('新規登録'):
 			create_tables()
 			try:
-				add_user(new_user,hash(new_password))
+				user_registration(new_user,hash(new_password))
 				st.success('アカウントの作成に成功しました')
 				st.info('ログイン画面からログインしてください')
 
@@ -89,7 +84,7 @@ def main():
 
 if __name__ == '__main__':
 	if 'user' not in st.session_state:
-		main()
+		start_menu()
 	else:
 		st.success('ログイン済みです')
 		st.sidebar.success('Select a page above.')
