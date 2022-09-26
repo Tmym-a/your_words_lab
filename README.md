@@ -1,6 +1,6 @@
 # Your Words Lab
  「にっぽうであそぼ」というコンセプトで制作した、日報管理システムです。<br >
- スマートフォンでもご使用いただけます。
+ スマートフォンからもご利用いただけます。
 
 ## 利用方法
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-y3niw8.streamlitapp.com/) <br >
@@ -13,7 +13,7 @@
 - Streamlit Sharing
 
 ## 機能一覧
-- ユーザー登録、ログイン機能(devise)
+- ゲストユーザー登録、ログイン機能(devise)
 - 投稿機能
   - 
   - 
