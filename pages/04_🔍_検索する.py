@@ -23,7 +23,7 @@ class Corpus4(module.Corpus):
                 opposite_df = pd.DataFrame(self.model.most_similar(negative=[keyword])).iloc[::-1]
                 opposite_df = opposite_df.set_index(0)
                 opposite_df.columns = ['cos類似度']
-                st.write('Opposite words TOP')
+                st.write('Opposite words')
                 st.table(opposite_df)
         else:
             st.info('申し訳ありません。その単語は登録されていないため検索できません。')
