@@ -14,15 +14,13 @@ class Corpus4(module.Corpus):
             col1, col2 = st.columns(2)
 
             with col1:
-                similar_df = pd.DataFrame(self.model.most_similar(positive=[keyword]))
-                similar_df = similar_df.set_index(0)
-                similar_df.columns = ['cos類似度']
+                similar_df = pd.DataFrame(self.model.most_similar(positive=[keyword]), columns=['単語', 'cos類似度'])
+                similar_df = similar_df.set_index('単語')
                 st.write('Similar words')
                 st.table(similar_df)
             with col2:
-                opposite_df = pd.DataFrame(self.model.most_similar(negative=[keyword])).iloc[::-1]
-                opposite_df = opposite_df.set_index(0)
-                opposite_df.columns = ['cos類似度']
+                opposite_df = pd.DataFrame(self.model.most_similar(negative=[keyword]), columns=['単語', 'cos類似度']).iloc[::-1]
+                opposite_df = opposite_df.set_index('単語')
                 st.write('Opposite words')
                 st.table(opposite_df)
         else:
