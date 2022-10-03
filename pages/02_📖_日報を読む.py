@@ -31,7 +31,8 @@ class Page2(module.Page):
             if len(input_users) == 1 and len(reports) > 1:
                 chart_df = user_df.loc[:, ['date','feelings','variables']].head(30)
                 chart_df = chart_df.set_index('date')
-                st.write('数値の推移')
+                chart_df.columns = ['感情', '数値']
+                st.write('感情と数値の推移')
                 st.line_chart(chart_df)
             # テーブルの表示
             st.write('日報')

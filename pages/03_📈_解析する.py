@@ -124,6 +124,7 @@ class Page3(module.Page):
         comment.text('Start!')
 
         st.subheader('解析結果')
+        st.caption('タブの切り替えで他のグラフを表示')
 
         with st.spinner('Wait for it...'):         
             tab1, tab2, tab3, tab4 = st.tabs(['🌩 Word cloud', '📊 TOP10', '📉 Vectors', '💥 Clusters'])
