@@ -4,7 +4,7 @@
 <br >
 <br >
 ## 利用手順
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-y3niw8.streamlitapp.com/) <br >
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://tmym-a-your-words-lab-start-5icyrb.streamlitapp.com/) <br >
 
 1. 上のバッジをクリックすると、アプリが起動します
 
